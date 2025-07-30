@@ -8,7 +8,7 @@ package:
   description: |
     爱享素材下载器，视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!
 
-command: [start.bash] #the commands that your application need to run.
+command: [start_x86_64.bash] #the commands that your application need to run.
 
 base: org.deepin.base/25.2.0 #set the base environment, this can be changed.
 
@@ -26,11 +26,11 @@ permissions:
 
 build: |
   mkdir -p $PREFIX/etc
-  echo "export WEBKIT_EXEC_PATH=$PREFIX/lib/x86_64-linux-gnu/webkit2gtk-4.0" >> $PREFIX/etc/profile
+  echo "export WEBKIT_EXEC_PATH=$PREFIX/lib/$TRIPLET/webkit2gtk-4.0" >> $PREFIX/etc/profile
   bash install "linglong/sources/res-downloader_3.1.0_linux_amd64.deb" $PREFIX
   echo "export PREFIX=$PREFIX" >> $PREFIX/etc/profile
   # 自定义启动脚本
-  cp start.bash $PREFIX/bin/start.bash
+  cp start_x86_64.bash $PREFIX/bin/start_x86_64.bash
 
 sources:
   - kind: file

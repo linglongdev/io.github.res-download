@@ -1,0 +1,39 @@
+version: "1"
+
+package:
+  id: io.github.res-download
+  name: res-download
+  version: 3.1.0.0
+  kind: app
+  description: |
+    爱享素材下载器，视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!
+
+command: [start_arm64.bash] #the commands that your application need to run.
+
+base: org.deepin.base/25.2.0 #set the base environment, this can be changed.
+
+buildext:
+  apt:
+    build_depends: # 构建时依赖，仅在构建环境中安装
+    depends: # 运行时依赖，会包含在最终的应用或运行时中
+      - libwebkit2gtk-4.0-37
+
+permissions:
+  binds:
+    # webkit2gtk 只会在指定目录查找二进制，所以将目录挂载到可写目录，再启动前复制webkit2gtk二进制到里面
+    - source: "/tmp"
+      destination: "/usr/lib/aarch64-linux-gnu/webkit2gtk-4.0"
+
+build: |
+  mkdir -p $PREFIX/etc
+  echo "export WEBKIT_EXEC_PATH=$PREFIX/lib/$TRIPLET/webkit2gtk-4.0" >> $PREFIX/etc/profile
+  bash install "linglong/sources/res-downloader_3.1.0_linux_arm64.deb" $PREFIX
+  echo "export PREFIX=$PREFIX" >> $PREFIX/etc/profile
+  # 自定义启动脚本
+  cp start_arm64.bash $PREFIX/bin/start_arm64.bash
+
+sources:
+  - kind: file
+    url: https://git.cicd.getdeepin.org/releases/https://github.com/putyy/res-downloader/releases/download/3.1.0/res-downloader_3.1.0_linux_arm64
+    digest: 70936eec076ab33b9a87a67f926a5a06d7aa5cc0ee3e867dfef0fc688171f986
+    name: res-downloader_3.1.0_linux_arm64.deb
